@@ -1,0 +1,41 @@
+项目文档/
+/linux/
+/macos/
+/web/
+/windows/
+/ios/
+
+# 二进制、大文件与数据
+*.sqlite
+*.db
+/data/
+/big_data/
+/*.csv
+*.log
+*.json
+assets/large_datasets/
+
+# 敏感信息
+.env
+secrets/
+secrets.json
+*.pem
+*.key
+supabase/.temp/
+
+# 构建产物 & 依赖 & 编译输出
+dist/
+build/
+node_modules/
+.dart_tool/
+.pub-cache/
+ios/Pods/
+ios/.generated/
+
+# IDE / VScode config
+.vscode/
+.history/
+
+# 操作系统冗余
+.DS_Store
+Thumbs.db
