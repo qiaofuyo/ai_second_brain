@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/recording_service.dart';
+import '../services/transcription_service.dart';
 
 class RecorderPage extends StatefulWidget {
   const RecorderPage({super.key});
@@ -11,6 +12,7 @@ class RecorderPage extends StatefulWidget {
 
 class _RecorderPageState extends State<RecorderPage> {
   final RecordingService _recorder = RecordingService();
+  final TranscriptionService _transcriber = TranscriptionService();
 
   Timer? _timer;
   int _seconds = 0;
@@ -27,20 +29,26 @@ class _RecorderPageState extends State<RecorderPage> {
     try {
       if (!_isRecording) {
         await _recorder.start();
+        setState(() {});
         _startTimer();
       } else {
         final path = await _recorder.stop();
+        setState(() {});
+        debugPrint(path);
         _stopTimer();
 
         if (path != null) {
-          _showSnack('录音已保存：$path');
+          // _showSnack('录音已保存：$path');
+          _showSnack('录音上传中...');
+          await _transcriber.uploadAndTranscribe(path);
+          _showSnack('转录完成');
         }
       }
-
-      setState(() {});
     } catch (e) {
       _stopTimer();
-      _showSnack('录音失败：$e');
+      setState(() {});
+      _showSnack('操作失败：$e');
+      debugPrint('操作失败：$e');
     }
   }
 
@@ -86,7 +94,6 @@ class _RecorderPageState extends State<RecorderPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             /// 录音状态文字
             Text(
               _isRecording ? '正在录音中...' : '点击开始录音',
@@ -125,6 +132,26 @@ class _RecorderPageState extends State<RecorderPage> {
               ),
             ),
 
+            const SizedBox(height: 30),
+
+            // 插入的转录状态显示
+            StreamBuilder<Map<String, dynamic>?>(
+              stream: _transcriber.watchLatestTranscript(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Text('暂无转写任务');
+                }
+                final row = snapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('状态：${row['status']}'),
+                    const SizedBox(height: 8),
+                    Text(row['text'] ?? '等待识别结果...'),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),

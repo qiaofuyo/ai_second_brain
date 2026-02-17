@@ -1,4 +1,23 @@
+# 依赖目录
+node_modules/
+dist/
+build/
+
+# 环境配置
 .env
+.env.local
+.env.*.local
+
+# 日志文件
+*.log
+logs/
+npm-debug.log*
+
+# IDE配置
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
 
 # Miscellaneous
 *.class
@@ -13,6 +32,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+/备注.md
 
 # IntelliJ related
 *.iml

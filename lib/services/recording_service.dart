@@ -71,14 +71,14 @@ class RecordingService {
   String _generateFileName() {
     final now = DateTime.now();
     final ts =
-        '${now.year}'
-        '${_two(now.month)}'
+        '${now.year}-'
+        '${_two(now.month)}-'
         '${_two(now.day)}_'
-        '${_two(now.hour)}'
-        '${_two(now.minute)}'
+        '${_two(now.hour)}-'
+        '${_two(now.minute)}-'
         '${_two(now.second)}';
 
-    return 'rec_$ts.aac';
+    return 'rec_$ts.m4a';
   }
 
   String _two(int n) => n.toString().padLeft(2, '0');
