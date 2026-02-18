@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'routes/app_routes.dart';
-import 'pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,16 +25,13 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AI Second Brain',
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
       ),
       initialRoute: AppRoutes.home,
-      routes: {
-        AppRoutes.home: (_) => const HomePage(),
-        ...AppRoutes.routes,
-      },
+      routes: AppRoutes.routes,
     );
   }
 }

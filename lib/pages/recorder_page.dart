@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/recording_service.dart';
 import '../services/transcription_service.dart';
+import './recordings_list_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecorderPage extends StatefulWidget {
   const RecorderPage({super.key});
@@ -40,8 +42,10 @@ class _RecorderPageState extends State<RecorderPage> {
         if (path != null) {
           // _showSnack('录音已保存：$path');
           _showSnack('录音上传中...');
+          debugPrint('当前用户: ${Supabase.instance.client.auth.currentUser}');
+          debugPrint('会话: ${Supabase.instance.client.auth.currentSession}');
           await _transcriber.uploadAndTranscribe(path);
-          _showSnack('转录完成');
+          _showSnack('转写完成');
         }
       }
     } catch (e) {
@@ -89,6 +93,21 @@ class _RecorderPageState extends State<RecorderPage> {
       appBar: AppBar(
         title: const Text('超级录音笔'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            tooltip: '录音列表',
+            onPressed: () {
+              // Navigator.pushNamed(context, AppRoutes.recordingsList);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const RecordingsListPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -134,7 +153,7 @@ class _RecorderPageState extends State<RecorderPage> {
 
             const SizedBox(height: 30),
 
-            // 插入的转录状态显示
+            // 插入的转写状态显示
             StreamBuilder<Map<String, dynamic>?>(
               stream: _transcriber.watchLatestTranscript(),
               builder: (context, snapshot) {
